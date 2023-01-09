@@ -1,10 +1,12 @@
-# Copyright 2017-2019 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2017-2021 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import logging
-
+import requests
 
 logger = logging.getLogger(__name__)
+
+PLUGIN_URL = "https://plugins.wazo.community/0.1/plugins"
 
 
 class PluginService(object):
@@ -33,3 +35,10 @@ class PluginService(object):
             results.append(plugin)
 
         return {'items': results}
+
+    def list_community_plugins(self):
+        try:
+            r = requests.get(PLUGIN_URL)
+            return r.json()
+        except (requests.RequestException, ValueError):
+            return []
